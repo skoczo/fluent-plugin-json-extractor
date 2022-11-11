@@ -26,17 +26,19 @@ class JsonExtractorFilterTest < Test::Unit::TestCase
       conf = %(
         extract_key   #{val}
       )
-      d = create_driver(conf)
-      assert_equal(val.length, d.instance.extract_key.length)
+      driver = create_driver(conf)
+      assert_equal(val.length, driver.instance.extract_key.length)
     end
 
-    test 'test too many required parameters, last will be taken' do
+    test 'test too many required parameters, last will be taken as data are overrided' do
       conf = %(
         extract_key   value
         extract_key   value2
       )
       
-      create_driver(conf)
+      driver = create_driver(conf)
+      assert_equal(0, driver.error_events.size)
+      assert_equal("value2", driver.instance.extract_key)
     end
   end
 
